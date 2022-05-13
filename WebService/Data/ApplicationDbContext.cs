@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using static WebService.Models.FilmModel;
 
 namespace WebService.Data
 {
@@ -9,5 +10,8 @@ namespace WebService.Data
             : base(options)
         {
         }
+
+        public DbSet<Film> Film { get; set; }
+        public DbSet<UserFavoris> UserFavoris { get; set; }
     }
 }
