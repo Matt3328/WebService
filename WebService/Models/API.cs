@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using static WebService.Models.FilmModel;
 
 namespace WebService.Models
 {
@@ -15,6 +16,7 @@ namespace WebService.Models
             public int Id { get; set; }
             public string? Title { get; set; }
             public string? poster_path { get; set; }
+            public int? Like { get; set; }
         }
 
     }
