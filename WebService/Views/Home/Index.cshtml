@@ -1,0 +1,45 @@
+@model ICollection<WebService.Models.API.Movie>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@foreach (var item in Model)
+{
+    <h4>@item.Title</h4>
+    string url = "https://image.tmdb.org/t/p/original" + @item.poster_path;
+    int id = item.Id;
+    <img width="20%" src="@url" />
+    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+    <p>
+        J'aime:
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <i onclick="addLike(@item.Id)" style="cursor:pointer" class="bi bi-heart"></i>
+        }
+        else
+        {
+            <i class="bi bi-heart"></i>
+        }
+        <span id="@item.Id">@item.Like</span>
+    </p>
+}
+
+<script>
+        var UrlSettings = {
+        url: '@Url.Action("AddLike", "Home")',
+    }
+
+        function addLike(idFilm){
+        idFilm = parseInt(idFilm);
+    $.ajax({
+        url: UrlSettings.url,
+        type: "POST",
+        data: { id: idFilm },
+    }).done(function(result) {
+            var span = document.getElementById(idFilm);
+            span.innerHTML = result.toString();
+        });
+
+
+        }
+</script>
