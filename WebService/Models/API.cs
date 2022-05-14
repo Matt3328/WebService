@@ -15,8 +15,11 @@ namespace WebService.Models
         {
             public int Id { get; set; }
             public string? Title { get; set; }
+            public string? Overview { get; set; }
+
             public string? poster_path { get; set; }
             public int? Like { get; set; }
+            public bool IsLiked { get; set; }
         }
 
     }

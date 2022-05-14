@@ -1,22 +1,44 @@
-@model WebService.Models.FilmModel.Film
+﻿@model WebService.Models.API.Movie
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 @{
     ViewData["Title"] = "Details";
+    string url = "https://image.tmdb.org/t/p/original" + Model.poster_path;
 }
 
-<h1>Details</h1>
+@if (!SignInManager.IsSignedIn(User))
+{
+    <b>Connectez-vous pour ajouter un j'aime aux films</b>
+}
+
+<h1>@Model.Title</h1>
 
 <div>
-    <h4>CegidSaas</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-    </dl>
+    <img width="20%" src="@url" />
+    <br />
+    <span>@Model.Overview</span>
+    <div id="@Model.Id">
+        j'aime :
+        @if (SignInManager.IsSignedIn(User))
+        {
+            @if (Model.IsLiked)
+            {
+                <i onclick="addOrRemoveLike(@Model.Id, 'remove')" style="cursor:pointer;" class="bi bi-heart-fill"></i>
+            }
+            else
+            {
+                <i onclick="addOrRemoveLike(@Model.Id, 'add')" style="cursor:pointer" class="bi bi-heart"></i>
+            }
+        }
+        else
+        {
+            <i class="bi bi-heart"></i>
+        }
+        <span>@Model.Like</span>
+    </div>
 </div>
 <div>
     <a asp-action="Index">Back to List</a>

@@ -3,43 +3,40 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
-@foreach (var item in Model)
+@if (!SignInManager.IsSignedIn(User))
 {
-    <h4>@item.Title</h4>
-    string url = "https://image.tmdb.org/t/p/original" + @item.poster_path;
-    int id = item.Id;
-    <img width="20%" src="@url" />
-    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-    <p>
-        J'aime:
-        @if (SignInManager.IsSignedIn(User))
-        {
-            <i onclick="addLike(@item.Id)" style="cursor:pointer" class="bi bi-heart"></i>
-        }
-        else
-        {
-            <i class="bi bi-heart"></i>
-        }
-        <span id="@item.Id">@item.Like</span>
-    </p>
+    <b>Connectez-vous pour ajouter un j'aime aux films</b>
 }
 
-<script>
-        var UrlSettings = {
-        url: '@Url.Action("AddLike", "Home")',
-    }
-
-        function addLike(idFilm){
-        idFilm = parseInt(idFilm);
-    $.ajax({
-        url: UrlSettings.url,
-        type: "POST",
-        data: { id: idFilm },
-    }).done(function(result) {
-            var span = document.getElementById(idFilm);
-            span.innerHTML = result.toString();
-        });
-
-
+@foreach (var item in Model)
+{
+    <div>
+        <h4>@item.Title</h4>
+        @{
+            string url = "https://image.tmdb.org/t/p/original" + @item.poster_path;
+            int id = item.Id;
         }
-</script>
+        <img width="20%" src="@url" />
+        <br />
+        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+        <div id=@item.Id>
+            J'aime:
+            @if (SignInManager.IsSignedIn(User))
+            {
+                @if (item.IsLiked)
+                {
+                    <i onclick="addOrRemoveLike(@item.Id, 'remove')" style="cursor:pointer;" class="bi bi-heart-fill"></i>
+                }
+                else
+                {
+                    <i onclick="addOrRemoveLike(@item.Id, 'add')" style="cursor:pointer" class="bi bi-heart"></i>
+                }
+            }
+            else
+            {
+                <i class="bi bi-heart"></i>
+            }
+            <span>@item.Like</span>
+        </div>
+    </div>
+}
